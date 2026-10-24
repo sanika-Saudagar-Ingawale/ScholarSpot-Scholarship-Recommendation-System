@@ -209,12 +209,4 @@ Keep only the folders and filenames that actually exist in your project. Add `da
 
 This project is intended to help students discover potentially relevant scholarships. Recommendations are based on the information available in the database and the implemented matching rules. Students should verify current eligibility, deadlines, required documents, and application procedures on the official scholarship portal before applying.
 
-## 👩‍💻 Author
-
-**Your Name:** Replace with your name  
-**GitHub:** Add your GitHub profile URL
-
-## 📄 License
-
-Choose a license before distributing or reusing this project. For example, you may use the MIT License by adding a `LICENSE` file with its complete text.
 
