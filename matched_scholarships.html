@@ -1,0 +1,564 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .matched-page {
+        max-width: 1200px;
+        margin: 25px auto;
+        padding: 15px;
+        color: #1e293b;
+    }
+
+    .matched-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 35px 30px;
+        border-radius: 22px;
+        color: white;
+        background: linear-gradient(135deg, #0f766e, #2563eb);
+        box-shadow: 0 12px 30px rgba(37, 99, 235, 0.16);
+        margin-bottom: 28px;
+    }
+
+    .matched-hero h2 {
+        font-weight: 800;
+        margin-bottom: 12px;
+    }
+
+    .matched-hero p {
+        margin-bottom: 0;
+        color: #e0f2fe;
+        line-height: 1.7;
+    }
+
+    .hero-icon {
+        font-size: 58px;
+        text-align: center;
+    }
+
+    .profile-summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 22px;
+    }
+
+    .profile-chip {
+        background: rgba(255,255,255,0.16);
+        border: 1px solid rgba(255,255,255,0.25);
+        padding: 8px 13px;
+        border-radius: 30px;
+        font-size: 13px;
+    }
+
+    .results-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .results-heading h3 {
+        font-size: 24px;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .results-count {
+        background: #dcfce7;
+        color: #166534;
+        padding: 8px 14px;
+        border-radius: 30px;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .scholarship-card {
+        height: 100%;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        background: #fff;
+        overflow: hidden;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .scholarship-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 32px rgba(15, 23, 42, 0.10);
+    }
+
+    .card-top {
+        padding: 20px 20px 14px;
+        background: linear-gradient(135deg, #f0fdfa, #eff6ff);
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .scholarship-icon {
+        width: 48px;
+        height: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        background: #fff;
+        font-size: 25px;
+        box-shadow: 0 3px 10px rgba(15,23,42,0.06);
+        margin-bottom: 12px;
+    }
+
+    .scholarship-name {
+        font-size: 18px;
+        font-weight: 800;
+        line-height: 1.45;
+        overflow-wrap: anywhere;
+        margin-bottom: 7px;
+    }
+
+    .provider {
+        color: #64748b;
+        font-size: 13px;
+        margin-bottom: 0;
+    }
+
+    .card-content {
+        padding: 20px;
+    }
+
+    .award-box {
+        padding: 13px;
+        border-radius: 13px;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        margin-bottom: 17px;
+    }
+
+    .award-label {
+        font-size: 12px;
+        color: #166534;
+        margin-bottom: 4px;
+    }
+
+    .award-value {
+        color: #15803d;
+        font-size: 20px;
+        font-weight: 800;
+        overflow-wrap: anywhere;
+    }
+
+    .info-item {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 13px;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .info-item .info-icon {
+        flex-shrink: 0;
+        font-size: 16px;
+    }
+
+    .info-item strong {
+        display: block;
+        color: #334155;
+        margin-bottom: 2px;
+    }
+
+    .info-item span {
+        color: #64748b;
+        overflow-wrap: anywhere;
+    }
+
+    .match-box {
+        margin-top: 15px;
+        padding: 14px;
+        border-radius: 12px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+    }
+
+    .match-title {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 9px;
+    }
+
+    .match-track {
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+   .match-fill {
+    height: 100%;
+    width: var(--match-width, 0%);
+    max-width: 100%;
+    background: linear-gradient(90deg, #0d9488, #22c55e);
+    border-radius: 10px;
+}
+
+    .match-note {
+        font-size: 11px;
+        color: #64748b;
+        margin-top: 8px;
+        line-height: 1.5;
+    }
+
+    .reason-list {
+        list-style: none;
+        padding: 0;
+        margin: 12px 0 0;
+    }
+
+    .reason-list li {
+        font-size: 12px;
+        color: #475569;
+        margin-top: 7px;
+        line-height: 1.5;
+    }
+
+    .card-description {
+        margin-top: 17px;
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+    }
+
+    .card-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin-top: 20px;
+    }
+
+    .card-actions .btn {
+        flex: 1 1 130px;
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .btn-official {
+        color: white;
+        background: #2563eb;
+        border: 1px solid #2563eb;
+    }
+
+    .btn-official:hover {
+        background: #1d4ed8;
+        color: white;
+    }
+
+    .btn-save {
+        color: #0f766e;
+        background: white;
+        border: 1px solid #99f6e4;
+    }
+
+    .btn-save:hover {
+        background: #f0fdfa;
+        color: #115e59;
+    }
+
+    .empty-state {
+        padding: 50px 20px;
+        border: 1px dashed #cbd5e1;
+        border-radius: 20px;
+        background: #f8fafc;
+        text-align: center;
+    }
+
+    .empty-state .empty-icon {
+        font-size: 58px;
+        margin-bottom: 15px;
+    }
+
+    .empty-state h4 {
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    .empty-state p {
+        max-width: 560px;
+        margin: 0 auto 22px;
+        color: #64748b;
+        line-height: 1.7;
+    }
+
+    .empty-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .empty-actions .btn {
+        border-radius: 10px;
+        padding: 11px 17px;
+    }
+
+    .eligibility-note {
+        margin-top: 25px;
+        padding: 14px 16px;
+        border-radius: 12px;
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        color: #92400e;
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    @media (max-width: 576px) {
+        .matched-page {
+            padding: 10px;
+        }
+
+        .matched-hero {
+            padding: 25px 20px;
+        }
+
+        .matched-hero h2 {
+            font-size: 24px;
+        }
+
+        .hero-icon {
+            text-align: left;
+            font-size: 40px;
+            margin-top: 12px;
+        }
+
+        .results-heading h3 {
+            font-size: 21px;
+        }
+    }
+</style>
+
+<div class="matched-page">
+
+    <!-- Hero -->
+    <section class="matched-hero">
+        <div class="row align-items-center">
+            <div class="col-md-9">
+                <h2>🎓 Scholarships for You</h2>
+                <p>
+                    Discover scholarships matched to your student profile.
+                    Explore funding opportunities and check the official
+                    eligibility criteria before applying.
+                </p>
+
+                <div class="profile-summary">
+                    <span class="profile-chip">
+                        📚 {{ profile_data.course or 'Course not set' }}
+                    </span>
+                    <span class="profile-chip">
+                        🎯 Year: {{ profile_data.study_year or 'Not set' }}
+                    </span>
+                    <span class="profile-chip">
+                        📍 {{ profile_data.state or 'State not set' }}
+                    </span>
+                    <span class="profile-chip">
+                        👤 {{ profile_data.category or 'Category not set' }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-md-3 hero-icon">
+                📖✨
+            </div>
+        </div>
+    </section>
+
+    <!-- Results heading -->
+    <div class="results-heading">
+        <h3>✨ Your Matching Scholarships</h3>
+
+        {% if scholarships %}
+            <span class="results-count">
+                {{ scholarships|length }} opportunities
+            </span>
+        {% endif %}
+    </div>
+
+    {% if scholarships %}
+
+        <div class="row">
+            {% for scholarship in scholarships %}
+
+            <div class="col-lg-6 col-xl-4 col-md-6 mb-4">
+                <article class="scholarship-card">
+
+                    <div class="card-top">
+                        <div class="scholarship-icon">🎓</div>
+
+                        <h4 class="scholarship-name">
+                            {{ scholarship.name }}
+                        </h4>
+
+                        <p class="provider">
+                            🏛️ {{ scholarship.provider or 'Scholarship Provider' }}
+                        </p>
+                    </div>
+
+                    <div class="card-content">
+
+                        <div class="award-box">
+                            <div class="award-label">
+                                💰 Scholarship Award
+                            </div>
+                            <div class="award-value">
+                                {% if scholarship.amount %}
+                                    ₹{{ "{:,.0f}".format(scholarship.amount|float) }}
+                                {% else %}
+                                    {{ scholarship.award or 'Check official details' }}
+                                {% endif %}
+                            </div>
+                            {% if scholarship.award %}
+                                <small>{{ scholarship.award }}</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-icon">📚</span>
+                            <div>
+                                <strong>Education Level</strong>
+                                <span>{{ scholarship.education or 'Check official criteria' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-icon">📍</span>
+                            <div>
+                                <strong>Region</strong>
+                                <span>{{ scholarship.region or 'Check official criteria' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="info-icon">👥</span>
+                            <div>
+                                <strong>Eligible Category</strong>
+                                <span>{{ scholarship.community or 'Check official criteria' }}</span>
+                            </div>
+                        </div>
+
+                        {% if scholarship.deadline %}
+                        <div class="info-item">
+                            <span class="info-icon">📅</span>
+                            <div>
+                                <strong>Application Deadline</strong>
+                                <span>{{ scholarship.deadline }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="match-box">
+                            <div class="match-title">
+                                <span>🎯 Profile Match Score</span>
+                                <span>{{ scholarship.match_score|default(0) }}%</span>
+                            </div>
+
+                            <div class="match-track">
+                                     <div class="match-fill"
+                                             style="--match-width: {{ scholarship.match_score|default(0)|int }}%;">
+                                    </div>
+                            </div>
+
+                            <p class="match-note">
+                                This score reflects matching fields in your profile.
+                                It is not a probability of selection.
+                            </p>
+
+                            {% if scholarship.match_reasons %}
+                            <ul class="reason-list">
+                                {% for reason in scholarship.match_reasons %}
+                                <li>✅ {{ reason }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+
+                        <div class="card-description">
+                            {{ scholarship.description or 'Visit the official website for more information.' }}
+                        </div>
+
+                        <div class="card-actions">
+                            <a href="{{ scholarship.official_url or 'https://scholarships.gov.in/' }}"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="btn btn-official">
+                                View Official Details ↗
+                            </a>
+
+                            {% if scholarship.id in saved_ids %}
+                                <button type="button"
+                                        class="btn btn-save"
+                                        disabled>
+                                    ✓ Saved
+                                </button>
+                            {% else %}
+                                <form action="{{ url_for('save_scholarship', scholarship_id=scholarship.id) }}"
+                                      method="POST"
+                                      style="flex: 1 1 130px;">
+                                    <button type="submit"
+                                            class="btn btn-save w-100">
+                                        ♡ Save Scholarship
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </article>
+            </div>
+
+            {% endfor %}
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+            <div class="empty-icon">🔍🎓</div>
+            <h4>No Matching Scholarships Found</h4>
+
+            <p>
+                We couldn't find scholarships matching the criteria currently
+                entered in your profile. Check your details, then explore
+                all available scholarships.
+            </p>
+
+            <div class="empty-actions">
+                <a href="{{ url_for('profile') }}"
+                   class="btn btn-primary">
+                    ✏️ Update My Profile
+                </a>
+
+                <a href="{{ url_for('scholarships') }}"
+                   class="btn btn-outline-primary">
+                    Browse All Scholarships
+                </a>
+            </div>
+        </div>
+
+    {% endif %}
+
+    <div class="eligibility-note">
+        <strong>⚠️ Important:</strong>
+        These results are based on the eligibility fields available in this
+        application. Always check the scholarship's official website for
+        complete eligibility rules, deadlines, required documents and final
+        application status. A profile match does not guarantee selection.
+    </div>
+
+</div>
+
+{% endblock %}

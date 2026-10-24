@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block title %}{{ code }} | Scholar Spot{% endblock %}
+{% block content %}<section class="error-page"><div class="eyebrow">OOPS</div><h1>{{ code }}</h1><h2>Something went wrong.</h2><p>{{ message }}</p><a class="button" href="{{ url_for('home') }}">Back to home →</a></section>{% endblock %}

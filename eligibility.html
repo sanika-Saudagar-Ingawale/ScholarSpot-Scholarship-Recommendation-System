@@ -1,0 +1,438 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+    .eligibility-page {
+        max-width: 1050px;
+        margin: 30px auto;
+        padding: 15px;
+        color: #1e293b;
+    }
+
+    .eligibility-hero {
+        background: linear-gradient(135deg, #064e3b, #0f766e, #2563eb);
+        color: white;
+        border-radius: 24px;
+        padding: 35px;
+        margin-bottom: 28px;
+        box-shadow: 0 12px 30px rgba(15, 118, 110, .18);
+    }
+
+    .eligibility-hero h1 {
+        font-size: 32px;
+        font-weight: 800;
+        margin-bottom: 12px;
+    }
+
+    .eligibility-hero p {
+        color: #e0f2fe;
+        line-height: 1.8;
+        margin-bottom: 0;
+    }
+
+    .hero-icon {
+        font-size: 65px;
+        text-align: center;
+    }
+
+    .eligibility-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 28px;
+        box-shadow: 0 8px 28px rgba(15, 23, 42, .06);
+    }
+
+    .section-heading {
+        font-size: 22px;
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+
+    .section-description {
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.7;
+        margin-bottom: 25px;
+    }
+
+    .form-field {
+        margin-bottom: 22px;
+    }
+
+    .form-field label {
+        display: block;
+        font-weight: 700;
+        font-size: 14px;
+        margin-bottom: 9px;
+        color: #334155;
+    }
+
+    .field-icon {
+        margin-right: 6px;
+        color: #0f766e;
+    }
+
+    .eligibility-page .bi {
+        vertical-align: -0.08em;
+    }
+
+    .hero-icon .bi {
+        font-size: 58px;
+    }
+
+    .result-icon .bi {
+        font-size: 25px;
+        color: #0f766e;
+    }
+
+    .empty-icon .bi {
+        color: #0f766e;
+    }
+
+    .form-field input,
+    .form-field select {
+        display: block;
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 11px;
+        background: #fff;
+        color: #1e293b;
+        font-size: 14px;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+    .form-field input:focus,
+    .form-field select:focus {
+        outline: none;
+        border-color: #0d9488;
+        box-shadow: 0 0 0 3px rgba(13, 148, 136, .12);
+    }
+
+    .field-help {
+        display: block;
+        color: #94a3b8;
+        font-size: 12px;
+        margin-top: 7px;
+    }
+
+    .find-button {
+        display: block;
+        width: 100%;
+        padding: 14px 20px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #0f766e, #2563eb);
+        color: white;
+        font-size: 16px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: transform .2s, box-shadow .2s;
+    }
+
+    .find-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(37, 99, 235, .2);
+    }
+
+    .privacy-note {
+        background: #f0fdfa;
+        border: 1px solid #ccfbf1;
+        border-radius: 12px;
+        padding: 14px;
+        margin-top: 20px;
+        color: #115e59;
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .results-heading {
+        margin: 35px 0 20px;
+        font-size: 25px;
+        font-weight: 800;
+    }
+
+    .result-card {
+        height: 100%;
+        padding: 22px;
+        border: 1px solid #e2e8f0;
+        border-radius: 17px;
+        background: white;
+        box-shadow: 0 5px 18px rgba(15, 23, 42, .04);
+        transition: transform .2s, box-shadow .2s;
+        overflow-wrap: anywhere;
+    }
+
+    .result-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 25px rgba(15, 23, 42, .09);
+    }
+
+    .result-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #ecfdf5;
+        border-radius: 13px;
+        font-size: 25px;
+        margin-bottom: 15px;
+    }
+
+    .result-card h3 {
+        font-size: 18px;
+        font-weight: 800;
+        line-height: 1.5;
+    }
+
+    .result-meta {
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.8;
+        margin: 12px 0;
+    }
+
+    .result-link {
+        display: inline-block;
+        padding: 10px 15px;
+        border-radius: 9px;
+        background: #eff6ff;
+        color: #1d4ed8;
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 13px;
+    }
+
+    .result-link:hover {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .empty-results {
+        padding: 30px 20px;
+        background: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        border-radius: 16px;
+        text-align: center;
+        color: #64748b;
+        line-height: 1.7;
+    }
+
+    .empty-results .empty-icon {
+        font-size: 42px;
+        margin-bottom: 10px;
+    }
+
+    .disclaimer {
+        color: #92400e;
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-radius: 12px;
+        padding: 15px;
+        margin-top: 22px;
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    @media (max-width: 600px) {
+        .eligibility-page {
+            padding: 10px;
+            margin: 15px auto;
+        }
+
+        .eligibility-hero {
+            padding: 24px 20px;
+        }
+
+        .eligibility-hero h1 {
+            font-size: 26px;
+        }
+
+        .hero-icon {
+            text-align: left;
+            font-size: 45px;
+            margin-top: 15px;
+        }
+
+        .eligibility-card {
+            padding: 20px;
+        }
+    }
+</style>
+
+<div class="eligibility-page">
+
+    <!-- Hero Section -->
+    <section class="eligibility-hero">
+        <div class="row align-items-center">
+            <div class="col-md-9">
+                <h1><i class="bi bi-mortarboard-fill" aria-hidden="true"></i> Find Your Scholarship</h1>
+                <p>
+                    Your education deserves every opportunity.
+                    Enter your details to discover scholarships that
+                    may match your educational background.
+                </p>
+            </div>
+            <div class="col-md-3 hero-icon">
+                <i class="bi bi-book-half" aria-hidden="true"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Eligibility Form -->
+    <section class="eligibility-card">
+        <h2 class="section-heading"><i class="bi bi-search" aria-hidden="true"></i> Find My Scholarship Match</h2>
+        <p class="section-description">
+            Fill in the details below to explore relevant funding opportunities.
+            Fields marked with * are required.
+        </p>
+
+        <form method="POST" action="{{ url_for('eligibility') }}">
+
+            <div class="row">
+                <div class="col-md-6 form-field">
+                    <label for="education">
+                        <span class="field-icon"><i class="bi bi-journal-bookmark-fill" aria-hidden="true"></i></span>
+                        Education Level *
+                    </label>
+                    <select id="education" name="education" required>
+                        <option value="">Select your education</option>
+                        <option value="School">School</option>
+                        <option value="Diploma">Diploma</option>
+                        <option value="Undergraduate">Undergraduate</option>
+                        <option value="Postgraduate">Postgraduate</option>
+                    </select>
+                    <small class="field-help">
+                        Choose your current level of study.
+                    </small>
+                </div>
+
+                <div class="col-md-6 form-field">
+                    <label for="region">
+                        <span class="field-icon"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i></span>
+                        State / Region
+                    </label>
+                    <input id="region"
+                           type="text"
+                           name="region"
+                           placeholder="e.g. Maharashtra">
+                    <small class="field-help">
+                        Some scholarships are state-specific.
+                    </small>
+                </div>
+
+                <div class="col-md-6 form-field">
+                    <label for="community">
+                        <span class="field-icon"><i class="bi bi-people-fill" aria-hidden="true"></i></span>
+                        Community / Category
+                    </label>
+                    <select id="community" name="community">
+                        <option value="">Any category</option>
+                        <option value="General">General</option>
+                        <option value="OBC">OBC</option>
+                        <option value="SC">SC</option>
+                        <option value="ST">ST</option>
+                        <option value="Minority">Minority</option>
+                    </select>
+                    <small class="field-help">
+                        Select the category applicable to you.
+                    </small>
+                </div>
+            </div>
+
+            <button type="submit" class="find-button">
+                <i class="bi bi-search-heart" aria-hidden="true"></i> Find Matching Scholarships
+            </button>
+
+            <div class="privacy-note">
+                <i class="bi bi-shield-lock-fill" aria-hidden="true"></i> <strong>Your next step:</strong>
+                Review the scholarships shown and verify the official eligibility
+                requirements before applying.
+            </div>
+        </form>
+    </section>
+
+    <!-- Matching Results -->
+    {% if matches is defined %}
+
+        <h2 class="results-heading"><i class="bi bi-bullseye" aria-hidden="true"></i> Matching Scholarships</h2>
+
+        {% if matches %}
+            <div class="row">
+                {% for scholarship in matches %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <article class="result-card">
+
+                            <div class="result-icon"><i class="bi bi-award-fill" aria-hidden="true"></i></div>
+
+                            <h3>
+                                {{ scholarship.get('title',
+                                   scholarship.get('name', 'Scholarship')) }}
+                            </h3>
+
+                            {% if scholarship.get('provider') %}
+                                <p class="result-meta">
+                                    <i class="bi bi-bank" aria-hidden="true"></i> <strong>Provider:</strong>
+                                    {{ scholarship.get('provider') }}
+                                </p>
+                            {% endif %}
+
+                            {% if scholarship.get('amount') %}
+                                <p class="result-meta">
+                                    <i class="bi bi-cash-coin" aria-hidden="true"></i> <strong>Award:</strong>
+                                    {{ scholarship.get('amount') }}
+                                </p>
+                            {% elif scholarship.get('award') %}
+                                <p class="result-meta">
+                                    <i class="bi bi-cash-coin" aria-hidden="true"></i> <strong>Award:</strong>
+                                    {{ scholarship.get('award') }}
+                                </p>
+                            {% endif %}
+
+                            {% if scholarship.get('id') %}
+                                <a class="result-link"
+                                   href="{{ url_for('scholarship_detail',
+                                      scholarship_id=scholarship.get('id')) }}">
+                                    View Scholarship Details <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                                </a>
+                            {% endif %}
+
+                        </article>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-results">
+                <div class="empty-icon"><i class="bi bi-search" aria-hidden="true"></i></div>
+                <h3>No Matching Scholarships Found</h3>
+                <p>
+                    Try changing your education level, state or category.
+                    You can also browse all available scholarships.
+                </p>
+                <a href="{{ url_for('scholarships') }}"
+                   class="result-link">
+                    Browse All Scholarships <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </a>
+            </div>
+        {% endif %}
+
+        <div class="disclaimer">
+            <strong><i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i> Please note:</strong>
+            These are preliminary matches based on the criteria used by the
+            application. Check each scholarship's official rules, deadlines,
+            required documents and application portal before applying.
+            A match does not guarantee eligibility or selection.
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,267 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .compare-container {
+        max-width: 1200px;
+        margin: 35px auto;
+        padding: 20px;
+    }
+
+    .compare-heading {
+        color: #176b3a;
+        margin-bottom: 10px;
+    }
+
+    .compare-description {
+        color: #666;
+        margin-bottom: 25px;
+    }
+
+    .compare-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+    }
+
+    .compare-table {
+        width: 100%;
+        min-width: 650px;
+        border-collapse: collapse;
+        background: white;
+    }
+
+    .compare-table th,
+    .compare-table td {
+        padding: 15px;
+        border-bottom: 1px solid #e5e5e5;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    .compare-table th {
+        background: #176b3a;
+        color: white;
+    }
+
+    .compare-table tr:nth-child(even) {
+        background: #f8faf8;
+    }
+
+    .compare-table td:first-child {
+        font-weight: bold;
+        background: #f0f5f1;
+        min-width: 140px;
+    }
+
+    .compare-btn {
+        display: inline-block;
+        background: #176b3a;
+        color: white;
+        padding: 9px 14px;
+        text-decoration: none;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        margin: 3px;
+        font-size: 14px;
+    }
+
+    .compare-btn:hover {
+        background: #0e542b;
+        color: white;
+    }
+
+    .remove-btn {
+        background: #b42318;
+    }
+
+    .remove-btn:hover {
+        background: #8f1d14;
+    }
+
+    .empty-box {
+        text-align: center;
+        padding: 40px 20px;
+        border: 1px dashed #aaa;
+        border-radius: 10px;
+        background: #fafafa;
+    }
+
+    .empty-box a {
+        color: #176b3a;
+        font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+        .compare-container {
+            margin: 15px auto;
+            padding: 12px;
+        }
+
+        .compare-heading {
+            font-size: 25px;
+        }
+    }
+</style>
+
+<div class="compare-container">
+
+    <h1 class="compare-heading">Compare Scholarships</h1>
+
+    <p class="compare-description">
+        Compare scholarship benefits, eligibility requirements,
+        funding details and deadlines to make a better decision.
+    </p>
+
+    {% if scholarships %}
+
+        <p>
+            <strong>Selected scholarships:</strong>
+            {{ scholarships|length }} / 3
+        </p>
+
+        <div class="compare-table-wrapper">
+            <table class="compare-table">
+
+                <thead>
+                    <tr>
+                        <th>Comparison</th>
+
+                        {% for scholarship in scholarships %}
+                            <th>
+                                {{ scholarship['title'] }}
+
+                                <form method="POST"
+                                      action="{{ url_for('compare') }}"
+                                      style="margin-top: 10px;">
+
+                                    <input type="hidden"
+                                           name="remove_id"
+                                           value="{{ scholarship['id'] }}">
+
+                                    <button type="submit"
+                                            class="compare-btn remove-btn">
+                                        Remove
+                                    </button>
+                                </form>
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Scholarship Provider</td>
+                        {% for scholarship in scholarships %}
+                            <td>
+                                {{ scholarship['provider'] or 'Not specified' }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+                    <tr>
+                        <td>Award Amount</td>
+                        {% for scholarship in scholarships %}
+                            <td>
+                                {{ scholarship['amount'] or 'Not specified' }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+                    <tr>
+                        <td>Education Level</td>
+                        {% for scholarship in scholarships %}
+                            <td>
+                                {{ scholarship['education'] or 'Not specified' }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+                    <tr>
+                        <td>Region</td>
+                        {% for scholarship in scholarships %}
+                            <td>
+                                {{ scholarship['region'] or 'Not specified' }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+                    <tr>
+                        <td>Community / Category</td>
+                        {% for scholarship in scholarships %}
+                            <td>
+                                {{ scholarship['community'] or 'Not specified' }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+                    <tr>
+                        <td>Funding Type</td>
+                        {% for scholarship in scholarships %}
+                            <td>
+                                {{ scholarship['funding'] or 'Not specified' }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+                    <tr>
+                        <td>Deadline</td>
+                        {% for scholarship in scholarships %}
+                            <td>
+                                {{ scholarship['deadline'] or 'Not specified' }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+                    <tr>
+                        <td>Application Status</td>
+                        {% for scholarship in scholarships %}
+                            <td>
+                                {{ scholarship['status'] or 'Not specified' }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+                    <tr>
+                        <td>More Information</td>
+                        {% for scholarship in scholarships %}
+                            <td>
+                                <a class="compare-btn"
+                                   href="{{ url_for(
+                                       'scholarship_detail',
+                                       scholarship_id=scholarship['id']
+                                   ) }}">
+                                    View Details
+                                </a>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+    {% else %}
+
+        <div class="empty-box">
+            <h2>No Scholarships Selected</h2>
+
+            <p>
+                Visit the scholarship directory and select scholarships
+                to compare them here.
+            </p>
+
+            <a href="{{ url_for('scholarships') }}">
+                Browse Scholarships
+            </a>
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

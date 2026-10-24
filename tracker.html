@@ -1,0 +1,428 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+.tracker-page {
+    --primary: #5b55e7;
+    --ink: #20213a;
+    --muted: #777b91;
+    color: var(--ink);
+    padding: 28px 0 50px;
+}
+.tracker-page * { box-sizing: border-box; }
+.tracker-hero {
+    background: linear-gradient(120deg, #5149d9, #8275f2);
+    color: white;
+    border-radius: 24px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 12px 30px #6258df25;
+}
+.tracker-hero:after {
+    content: "✓";
+    position: absolute;
+    right: 38px;
+    top: -34px;
+    font-size: 180px;
+    font-weight: 800;
+    color: #ffffff12;
+}
+.tracker-hero h1 {
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+.tracker-hero p { color: #eeedff; max-width: 540px; margin-bottom: 0; }
+.tracker-stat {
+    height: 100%;
+    background: white;
+    border: 1px solid #ececf5;
+    border-radius: 18px;
+    padding: 21px;
+    box-shadow: 0 5px 18px #25254a08;
+}
+.tracker-stat .stat-icon {
+    width: 43px;
+    height: 43px;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+    background: #eeedff;
+    color: var(--primary);
+    font-size: 21px;
+    margin-bottom: 16px;
+}
+.tracker-stat .stat-number { font-size: 29px; font-weight: 800; }
+.tracker-stat .stat-label { color: var(--muted); font-size: 13px; }
+.tracker-panel {
+    background: white;
+    border: 1px solid #ececf5;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 5px 18px #25254a08;
+}
+.tracker-panel h3 { font-weight: 750; font-size: 20px; }
+.tracker-label {
+    font-size: 13px;
+    font-weight: 650;
+    margin-bottom: 7px;
+    color: #484a63;
+}
+.tracker-page .form-control,
+.tracker-page .form-select {
+    border: 1px solid #e3e4ef;
+    border-radius: 11px;
+    padding: 11px 13px;
+    min-height: 46px;
+    background-color: #fcfcff;
+}
+.tracker-page .form-control:focus,
+.tracker-page .form-select:focus {
+    border-color: #8b83f3;
+    box-shadow: 0 0 0 3px #655cf51a;
+}
+.tracker-btn {
+    border: 0;
+    border-radius: 11px;
+    padding: 12px 19px;
+    background: var(--primary);
+    color: white;
+    font-weight: 700;
+    transition: .2s;
+}
+.tracker-btn:hover { background: #423bc2; color: white; transform: translateY(-1px); }
+.tracker-search { position: relative; min-width: 220px; }
+.tracker-search input { padding-left: 40px !important; }
+.tracker-search .search-icon {
+    position: absolute; left: 14px; top: 12px; color: #85869b;
+}
+.scholarship-card {
+    height: 100%;
+    border: 1px solid #e9e9f3;
+    border-radius: 18px;
+    padding: 21px;
+    background: white;
+    transition: transform .2s, box-shadow .2s, border-color .2s;
+}
+.scholarship-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px #302e6810;
+    border-color: #c9c5ff;
+}
+.scholarship-mark {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+    background: #eeedff;
+    color: #5b55e7;
+    font-size: 23px;
+    flex-shrink: 0;
+}
+.scholarship-title { font-size: 17px; font-weight: 750; line-height: 1.4; }
+.scholarship-provider { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 30px;
+    padding: 7px 11px;
+    font-size: 11px;
+    font-weight: 750;
+    line-height: 1.3;
+}
+.status-interested { background: #eeedff; color: #5147c8; }
+.status-preparing { background: #fff2d9; color: #986000; }
+.status-ready { background: #e5f3ff; color: #1768a7; }
+.status-applied { background: #e3f7ed; color: #167347; }
+.status-awarded { background: #dff7f1; color: #087e68; }
+.status-rejected { background: #ffebeb; color: #b33434; }
+.progress-track {
+    height: 6px;
+    border-radius: 10px;
+    background: #eeeef5;
+    overflow: hidden;
+    margin-top: 9px;
+}
+.progress-fill { height: 100%; border-radius: 10px; background: #6b61e9; }
+.tracker-meta {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+}
+.tracker-note {
+    padding: 12px;
+    background: #f8f8fd;
+    border-radius: 11px;
+    font-size: 13px;
+    color: #62647b;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+.tracker-link {
+    color: #5951d7;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 13px;
+}
+.tracker-link:hover { text-decoration: underline; }
+.tracker-empty {
+    text-align: center;
+    padding: 45px 20px;
+    border: 1px dashed #d7d7e9;
+    border-radius: 18px;
+    background: #fafaff;
+}
+.tracker-empty-icon { font-size: 42px; margin-bottom: 10px; }
+.tracker-section-title { font-size: 23px; font-weight: 800; letter-spacing: -.5px; }
+.tracker-section-subtitle { color: var(--muted); font-size: 14px; }
+@media(max-width: 576px) {
+    .tracker-page { padding-top: 15px; }
+    .tracker-hero { padding: 24px 20px; border-radius: 18px; }
+    .tracker-hero:after { right: 0; font-size: 130px; }
+    .tracker-panel { padding: 18px; }
+    .tracker-stat { padding: 16px; }
+    .tracker-stat .stat-number { font-size: 24px; }
+}
+</style>
+
+<div class="container tracker-page">
+
+    {% set ns = namespace(total=0, applied=0, awarded=0, pending=0) %}
+    {% for item in items %}
+        {% set ns.total = ns.total + 1 %}
+        {% if item.status == 'Applied' %}
+            {% set ns.applied = ns.applied + 1 %}
+        {% elif item.status == 'Awarded' %}
+            {% set ns.awarded = ns.awarded + 1 %}
+        {% elif item.status != 'Not selected' %}
+            {% set ns.pending = ns.pending + 1 %}
+        {% endif %}
+    {% endfor %}
+
+    <section class="tracker-hero mb-4">
+        <div class="position-relative" style="z-index:1">
+            <div class="small fw-bold mb-2" style="letter-spacing:1.5px">
+                YOUR SCHOLARSHIP JOURNEY
+            </div>
+            <h1 class="mb-2">Application Tracker ✨</h1>
+            <p>One place for all your scholarships. Stay organised, track your progress, and take the next step towards your goals.</p>
+        </div>
+    </section>
+
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+            <div class="tracker-stat">
+                <div class="stat-icon">📚</div>
+                <div class="stat-number">{{ ns.total }}</div>
+                <div class="stat-label">Total Tracked</div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="tracker-stat">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-number">{{ ns.pending }}</div>
+                <div class="stat-label">In Progress</div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="tracker-stat">
+                <div class="stat-icon">📨</div>
+                <div class="stat-number">{{ ns.applied }}</div>
+                <div class="stat-label">Applications Submitted</div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="tracker-stat">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-number">{{ ns.awarded }}</div>
+                <div class="stat-label">Scholarships Awarded</div>
+            </div>
+        </div>
+    </div>
+
+    <section class="tracker-panel mb-4">
+        <div class="d-flex align-items-start gap-3 mb-4">
+            <div class="scholarship-mark">＋</div>
+            <div>
+                <h3 class="mb-1">Track a Scholarship</h3>
+                <div class="tracker-section-subtitle">Add a scholarship and keep its status up to date.</div>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('tracker') }}">
+            <div class="row g-3">
+                <div class="col-12 col-lg-6">
+                    <label for="scholarship_id" class="tracker-label">Scholarship</label>
+                    <select name="scholarship_id" id="scholarship_id"
+                            class="form-select" required>
+                        <option value="">Choose a scholarship...</option>
+                        {% for scholarship in all_scholarships %}
+                        <option value="{{ scholarship.id }}">
+                            {{ scholarship.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                    <label for="status" class="tracker-label">Current Status</label>
+                    <select name="status" id="status" class="form-select" required>
+                        {% for status in statuses %}
+                        <option value="{{ status }}">{{ status }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <label for="notes" class="tracker-label">Notes & Reminders</label>
+                    <textarea name="notes" id="notes" class="form-control"
+                              rows="3" maxlength="1000"
+                              placeholder="e.g. Income certificate pending, collect marksheet, check application deadline..."></textarea>
+                    <div class="tracker-section-subtitle mt-2">
+                        Tip: Add missing documents or the next action you need to take.
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn tracker-btn">
+                        Save to My Tracker 
+                    </button>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <section>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-3">
+            <div>
+                <h2 class="tracker-section-title mb-1">My Scholarships</h2>
+                <div class="tracker-section-subtitle">Your saved tracking records in one view.</div>
+            </div>
+            <div class="tracker-search">
+                <span class="search-icon">⌕</span>
+                <input id="trackerSearch" type="search" class="form-control"
+                       placeholder="Search scholarships...">
+            </div>
+        </div>
+
+        {% if items %}
+        <div class="row g-3" id="trackerCards">
+            {% for item in items %}
+            {% set current_status = item.status %}
+            {% set progress = 10 %}
+            {% set status_class = 'status-interested' %}
+            {% if current_status == 'Preparing documents' %}
+                {% set progress = 35 %}
+                {% set status_class = 'status-preparing' %}
+            {% elif current_status == 'Ready to apply' %}
+                {% set progress = 55 %}
+                {% set status_class = 'status-ready' %}
+            {% elif current_status == 'Applied' %}
+                {% set progress = 80 %}
+                {% set status_class = 'status-applied' %}
+            {% elif current_status == 'Awarded' %}
+                {% set progress = 100 %}
+                {% set status_class = 'status-awarded' %}
+            {% elif current_status == 'Not selected' %}
+                {% set progress = 100 %}
+                {% set status_class = 'status-rejected' %}
+            {% endif %}
+
+            <div class="col-12 col-md-6 tracker-card-item"
+                 data-search="{{ (item.name ~ ' ' ~ (item.provider or '') ~ ' ' ~ item.status ~ ' ' ~ (item.notes or ''))|lower }}">
+                <article class="scholarship-card">
+                    <div class="d-flex align-items-start gap-3 mb-3">
+                        <div class="scholarship-mark">🎓</div>
+                        <div class="flex-grow-1">
+                            <div class="scholarship-title">{{ item.name }}</div>
+                            <div class="scholarship-provider">{{ item.provider or 'Scholarship provider' }}</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
+                        <span class="status-pill {{ status_class }}">
+                            <span>●</span> {{ current_status }}
+                        </span>
+                        <span class="tracker-meta">{{ progress }}% progress</span>
+                    </div>
+                    <div class="progress-track mb-3">
+                        <div class="progress-fill"style="width: {{ progress | default(0, true) }}%;"></div>
+                    </div>
+
+                    <div class="tracker-meta mb-3">
+                        <div class="mb-1">📅 <strong>Deadline:</strong>
+                            {{ item.deadline or 'Check official website' }}
+                        </div>
+                        <div>📝 <strong>Last updated:</strong>
+                            {{ item.updated_at or 'Not available' }}
+                        </div>
+                    </div>
+
+                    {% if item.notes %}
+                    <div class="tracker-note mb-3">
+                        <strong>My notes</strong>
+                        <div class="mt-1">{{ item.notes }}</div>
+                    </div>
+                    {% endif %}
+
+                    {% if item.official_url %}
+                    <a class="tracker-link"
+                       href="{{ item.official_url }}"
+                       target="_blank" rel="noopener noreferrer">
+                        Visit Official Website ↗
+                    </a>
+                    {% endif %}
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div id="trackerNoResults" class="tracker-empty mt-3" style="display:none">
+            <div class="tracker-empty-icon">🔎</div>
+            <h5>No matching scholarships</h5>
+            <p class="tracker-section-subtitle mb-0">Try another search term.</p>
+        </div>
+
+        {% else %}
+        <div class="tracker-empty">
+            <div class="tracker-empty-icon">🌱</div>
+            <h4 class="fw-bold">Your journey starts here</h4>
+            <p class="tracker-section-subtitle mx-auto" style="max-width:400px">
+                You haven't tracked any scholarships yet. Add your first scholarship using the form above and start organising your applications.
+            </p>
+        </div>
+        {% endif %}
+    </section>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const search = document.getElementById("trackerSearch");
+    const cards = document.querySelectorAll(".tracker-card-item");
+    const noResults = document.getElementById("trackerNoResults");
+
+    if (!search) return;
+
+    search.addEventListener("input", function () {
+        const query = search.value.trim().toLowerCase();
+        let visible = 0;
+
+        cards.forEach(function (card) {
+            const matches = (card.dataset.search || "").includes(query);
+            card.style.display = matches ? "" : "none";
+            if (matches) visible++;
+        });
+
+        if (noResults) {
+            noResults.style.display =
+                (cards.length > 0 && visible === 0) ? "block" : "none";
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Scholar Spot | Find support for your future{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow"><span class="eyebrow-dot"></span> YOUR FUTURE STARTS HERE</div>
+    <h1>Find the support.<br><span>Fund your future.</span></h1>
+    <p>Explore scholarship opportunities for school, college and higher education. Find options that match your goals and learn what to check before applying.</p>
+    <form class="hero-search" action="{{ url_for('scholarships') }}" method="get"><span>⌕</span><input name="q" placeholder="Search scholarships, courses..." aria-label="Search scholarships"><button class="button" type="submit">Search →</button></form>
+    <div class="hero-note"><span>✓</span> Free to explore <span>✓</span> Student-friendly</div>
+  </div>
+  <div class="hero-art" aria-hidden="true"><div class="art-circle circle-one"></div><div class="art-circle circle-two"></div><div class="cap">🎓</div><div class="book-stack"><div class="book book-green"></div><div class="book book-orange"></div><div class="book book-blue"></div><div class="book-pages"></div></div><div class="float-card float-top"><b>✦ More opportunities</b><small>One search away</small></div><div class="float-card float-bottom"><b>₹ Invest in your goals</b><small>Discover funding options</small></div></div>
+</section>
+<section class="section stats-row"><div><strong>{{ total }}+</strong><span>Directory entries</span></div><div><strong>6</strong><span>Search filters</span></div><div><strong>Free</strong><span>To explore</span></div></section>
+<section class="section">
+  <div class="section-heading"><div><div class="eyebrow">GET STARTED</div><h2>Explore opportunities</h2><p>Start with a few featured entries, then search the full directory.</p></div><a class="text-link" href="{{ url_for('scholarships') }}">View all scholarships →</a></div>
+  <div class="scholarship-grid">
+    {% for item in featured %}<article class="scholarship-card"><div class="card-topline"><div class="provider-icon">✦</div><span class="status {{ item.status|lower|replace(' ', '-') }}">{{ item.status }}</span></div><h3>{{ item.name }}</h3><p class="provider">{{ item.provider }}</p><div class="meta"><span class="tag">{{ item.region }}</span><span class="tag">{{ item.education }}</span><span class="tag">{{ item.funding }}</span></div><div class="award">Award / benefit<strong>{{ item.award }}</strong></div><div class="card-actions"><a class="text-link" href="{{ url_for('scholarship_detail', scholarship_id=item.id) }}">View details ↗</a><a class="button button-small" href="{{ url_for('scholarship_detail', scholarship_id=item.id) }}">Explore</a></div></article>{% endfor %}
+  </div>
+</section>
+<section class="callout section"><div class="callout-icon">✦</div><div><div class="eyebrow">YOUR NEXT STEP</div><h2>Keep your scholarship search organised.</h2><p>Create a free student account to save interesting scholarships in your dashboard.</p></div><a class="button" href="{{ url_for('register') }}">Create account →</a></section>
+<p class="disclaimer page-disclaimer">Some entries are demonstration records. Verify eligibility, application status, deadlines and award details with the official scholarship provider.</p>
+{% endblock %}

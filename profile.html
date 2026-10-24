@@ -1,0 +1,206 @@
+
+{% extends "base.html" %}
+{% block title %}My Student Profile | Scholar Spot{% endblock %}
+
+{% block content %}
+<style>
+.profile-container{max-width:1000px;margin:35px auto;padding:16px}
+.profile-card{background:white;padding:30px;border-radius:16px;border:1px solid #e1e8e2;box-shadow:0 8px 28px rgba(0,0,0,.06)}
+.profile-heading{color:#176b3a;margin-bottom:8px}
+.profile-subtitle{color:#666;margin-bottom:25px}
+.profile-section{margin:28px 0 18px;padding-bottom:10px;border-bottom:1px solid #e5eee7;color:#176b3a}
+.profile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.profile-field{display:flex;flex-direction:column;gap:7px}
+.profile-field label{font-weight:600;color:#333}
+.profile-field input,.profile-field select{box-sizing:border-box;width:100%;padding:12px;border:1px solid #ccd6ce;border-radius:8px;font-size:15px;background:#fff}
+.profile-field input:focus,.profile-field select:focus{outline:2px solid #b4d8bd;border-color:#176b3a}
+.full-width{grid-column:1/-1}
+.profile-actions{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
+.profile-btn{padding:12px 22px;border:0;border-radius:8px;background:#176b3a;color:white;text-decoration:none;font-size:15px;cursor:pointer}
+.profile-btn:hover{background:#0e542b;color:white}
+.secondary-btn{background:#eee;color:#333}
+.user-info{padding:15px;background:#f0f7f1;border-radius:9px;margin:20px 0;overflow-wrap:anywhere}
+.helper{font-size:12px;color:#666}
+@media(max-width:650px){.profile-grid{grid-template-columns:1fr}.full-width{grid-column:auto}.profile-card{padding:20px}.profile-actions{flex-direction:column}.profile-btn{text-align:center}}
+</style>
+
+{% set p = profile_data or {} %}
+
+<div class="profile-container">
+<div class="profile-card">
+    <h1 class="profile-heading">My Student Profile</h1>
+    <p class="profile-subtitle">Complete your details to help Scholar Spot find scholarships that may suit you.</p>
+
+    {% if user %}
+    <div class="user-info">
+        <strong>Account:</strong> {{ user["email"] }}<br>
+        <span class="helper">Your profile is saved privately under your logged-in account.</span>
+    </div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('profile') }}">
+        <h3 class="profile-section">1. Personal Information</h3>
+        <div class="profile-grid">
+            <div class="profile-field">
+                <label for="name">Full Name *</label>
+                <input id="name" name="name" value="{{ user['name'] if user else '' }}" required maxlength="150">
+            </div>
+            <div class="profile-field">
+                <label for="email">Email Address *</label>
+                <input id="email" name="email" type="email" value="{{ user['email'] if user else '' }}" required maxlength="255">
+            </div>
+            <div class="profile-field">
+                <label for="date_of_birth">Date of Birth</label>
+                <input id="date_of_birth" name="date_of_birth" type="date" value="{{ p.get('date_of_birth').strftime('%Y-%m-%d') if p.get('date_of_birth') else '' }}">
+            </div>
+            <div class="profile-field">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender">
+                    {% for x in ['','Female','Male','Other','Prefer not to say'] %}
+                    <option value="{{ x }}" {% if p.get('gender','') == x %}selected{% endif %}>{{ x if x else 'Select option' }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="profile-field">
+                <label for="phone">Mobile Number</label>
+                <input id="phone" name="phone" type="tel" maxlength="20" value="{{ p.get('phone','') }}" placeholder="Enter contact number">
+            </div>
+            <div class="profile-field">
+                <label for="category">Caste / Category</label>
+                <select id="category" name="category">
+                    {% for x in ['','General','EWS','OBC','SEBC','SC','ST','VJNT','SBC','Minority','Other','Prefer not to specify'] %}
+                    <option value="{{ x }}" {% if p.get('category','') == x %}selected{% endif %}>{{ x if x else 'Select category' }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <h3 class="profile-section">2. Address Information</h3>
+        <div class="profile-grid">
+            <div class="profile-field full-width">
+                <label for="address">House / Street / Full Address</label>
+                <input id="address" name="address" maxlength="255" value="{{ p.get('address','') }}" placeholder="House number, street, locality">
+            </div>
+            <div class="profile-field">
+                <label for="city">City / Village</label>
+                <input id="city" name="city" value="{{ p.get('city','') }}" maxlength="100">
+            </div>
+            <div class="profile-field">
+                <label for="district">District</label>
+                <input id="district" name="district" value="{{ p.get('district','') }}" maxlength="100">
+            </div>
+            <div class="profile-field">
+                <label for="state">Current State</label>
+                <input id="state" name="state" value="{{ p.get('state','') }}" maxlength="100" placeholder="e.g. Maharashtra">
+            </div>
+            <div class="profile-field">
+                <label for="pincode">PIN Code</label>
+                <input id="pincode" name="pincode" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" value="{{ p.get('pincode','') }}" placeholder="6-digit PIN code">
+            </div>
+            <div class="profile-field">
+                <label for="domicile_state">Domicile State</label>
+                <input id="domicile_state" name="domicile_state" value="{{ p.get('domicile_state','') }}" maxlength="100" placeholder="State of domicile">
+            </div>
+        </div>
+
+        <h3 class="profile-section">3. Education Information</h3>
+        <div class="profile-grid">
+            <div class="profile-field">
+                <label for="course">Course / Degree *</label>
+                <input id="course" name="course" required value="{{ p.get('course','') }}" placeholder="e.g. B.Tech AI & DS">
+            </div>
+            <div class="profile-field">
+                <label for="study_year">Current Study Year *</label>
+                <select id="study_year" name="study_year" required>
+                    {% for x in ['','Class IX','Class X','Class XI','Class XII','Diploma','First Year','Second Year','Third Year','Fourth Year','Master’s First Year','Master’s Second Year','Doctorate','Other'] %}
+                    <option value="{{ x }}" {% if p.get('study_year','') == x %}selected{% endif %}>{{ x if x else 'Select year / level' }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="profile-field full-width">
+                <label for="college">College / School / University</label>
+                <input id="college" name="college" value="{{ p.get('college','') }}" maxlength="200">
+            </div>
+            <div class="profile-field">
+                <label for="admission_year">Admission Year</label>
+                <input id="admission_year" name="admission_year" type="number" min="1990" max="2100" value="{{ p.get('admission_year','') }}" placeholder="e.g. 2024">
+            </div>
+            <div class="profile-field">
+                <label for="marks">Current Marks / CGPA</label>
+                <input id="marks" name="marks" type="number" min="0" step="0.01" value="{{ p.get('marks','') }}" placeholder="Enter percentage or CGPA">
+                <span class="helper">For CGPA, use your institution's scale. The scale is not automatically converted.</span>
+            </div>
+            <div class="profile-field">
+                <label for="tenth_percentage">Class 10 Percentage</label>
+                <input id="tenth_percentage" name="tenth_percentage" type="number" min="0" max="100" step="0.01" value="{{ p.get('tenth_percentage') if p.get('tenth_percentage') is not none else '' }}">
+            </div>
+            <div class="profile-field">
+                <label for="twelfth_percentage">Class 12 Percentage</label>
+                <input id="twelfth_percentage" name="twelfth_percentage" type="number" min="0" max="100" step="0.01" value="{{ p.get('twelfth_percentage') if p.get('twelfth_percentage') is not none else '' }}">
+            </div>
+            <div class="profile-field">
+                <label for="previous_percentage">Previous Year / Diploma Percentage</label>
+                <input id="previous_percentage" name="previous_percentage" type="number" min="0" max="100" step="0.01" value="{{ p.get('previous_percentage') if p.get('previous_percentage') is not none else '' }}">
+            </div>
+        </div>
+
+        <h3 class="profile-section">4. Family and Income</h3>
+        <div class="profile-grid">
+            <div class="profile-field">
+                <label for="annual_income">Annual Family Income (₹)</label>
+                <input id="annual_income" name="annual_income" type="number" min="0" step="1" value="{{ p.get('annual_income','') }}" placeholder="e.g. 180000">
+            </div>
+            <div class="profile-field">
+                <label for="parent_guardian_name">Parent / Guardian Name</label>
+                <input id="parent_guardian_name" name="parent_guardian_name" value="{{ p.get('parent_guardian_name','') }}" maxlength="150">
+            </div>
+            <div class="profile-field">
+                <label for="parent_occupation">Parent / Guardian Occupation</label>
+                <input id="parent_occupation" name="parent_occupation" value="{{ p.get('parent_occupation','') }}" maxlength="100">
+            </div>
+            <div class="profile-field">
+                <label for="minority_status">Minority Status</label>
+                <select id="minority_status" name="minority_status">
+                    {% for x in ['','Yes','No','Prefer not to specify'] %}
+                    <option value="{{ x }}" {% if p.get('minority_status','') == x %}selected{% endif %}>{{ x if x else 'Select option' }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="profile-field">
+                <label for="disability_status">Disability Status</label>
+                <select id="disability_status" name="disability_status">
+                    {% for x in ['','Yes','No','Prefer not to specify'] %}
+                    <option value="{{ x }}" {% if p.get('disability_status','') == x %}selected{% endif %}>{{ x if x else 'Select option' }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <h3 class="profile-section">5. Scholarship Preferences</h3>
+        <div class="profile-grid">
+            <div class="profile-field">
+                <label for="previous_scholarship">Received a Scholarship Before?</label>
+                <select id="previous_scholarship" name="previous_scholarship">
+                    {% for x in ['','Yes','No'] %}
+                    <option value="{{ x }}" {% if p.get('previous_scholarship','') == x %}selected{% endif %}>{{ x if x else 'Select option' }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="profile-field">
+                <label for="preferred_funding">Preferred Scholarship Type</label>
+                <select id="preferred_funding" name="preferred_funding">
+                    {% for x in ['','Full Funding','Partial Funding','Monthly Stipend','Fee Support','Any'] %}
+                    <option value="{{ x }}" {% if p.get('preferred_funding','') == x %}selected{% endif %}>{{ x if x else 'Select type' }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <button type="submit" class="profile-btn">Save Profile</button>
+            <a href="{{ url_for('dashboard') }}" class="profile-btn secondary-btn">Back to Dashboard</a>
+        </div>
+    </form>
+</div>
+</div>
+{% endblock %}
